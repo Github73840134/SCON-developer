@@ -4,7 +4,7 @@ A better way to dictonary
 ## Build Info
 Version: 1.0  
 Build: Latest (Jan 20 2022 @ 6:56 PM EST)  
-Platform: Developer
+Platform: Developer (**Proceed at your own risk**)
 ## Release Notes
 Inital Release
 ***
