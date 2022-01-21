@@ -1,4 +1,5 @@
 from collections import namedtuple
+import _io
 __version__ = "1.0"
 __build__ = "Latest"
 __platform__ = "Developer"
@@ -21,10 +22,12 @@ def parse(text):
 	result = {}
 	tree = []
 	comments = []
+	commentlines = []
 	parsed = result
 	listmode = False
 	mode = 0
 	ldepth = 0
+	y = 0
 	name = ""
 	value = ""
 	string = False
@@ -66,7 +69,7 @@ def parse(text):
 		elif cw == ";":
 			if string:
 				value += ';'
-			else:
+			elif wastring == False:
 				if value.isnumeric():
 					value = int(value)
 				elif value.lower() == 'true':
@@ -76,7 +79,7 @@ def parse(text):
 				elif value.lower() == 'null':
 					value = None
 			if mode == 2:
-				comments.append(comment)
+				comments.append((comment,y))
 				comment = ''
 				mode = 0
 				cw = ''
@@ -95,15 +98,21 @@ def parse(text):
 				cw = ''
 				listmode = False
 				wastring = False
-		elif cw == '\n' and string:
+		elif cw == '\n':
 			if string:
 				value += '\n'
 			cw = ''
-		elif cw == '\t' and string:
+			y += 1
+		elif cw == '\t':
 			if string:
 				value += '\t'
 			cw = ''
-		elif cw == '\n' or cw == '\t' or cw == ' ' and string == False:
+		
+		elif cw == ' ':
+			if string:
+				value += ' '
+			if mode == 2:
+				comment += ' '
 			cw = ''
 		elif cw == '{' and mode == 0 and string == False:
 			tree.append(parsed)
@@ -144,9 +153,11 @@ def parse(text):
 			tree.pop(len(tree)-1)
 			cw = ''
 			wastring = False
-			if type(tree[ldepth-1]) == dict:
-				value = ''
-				name = ''
+			print('t',tree)
+			if len(tree) != 0:
+				if type(tree[ldepth-1]) == dict:
+					value = ''
+					name = ''
 			waslist = True
 			ldepth -= 1
 		elif cw == "#":
@@ -159,6 +170,7 @@ def parse(text):
 				value += cw
 			if mode == 2:
 				comment += cw
+				print('ord',ord(cw))
 			cw = ''
 	f = namedtuple("result",['data','comments'])
 	verify(result)
@@ -241,11 +253,20 @@ ex. ```/test/name.str```
 	def __init__(self,data):
 		global bself
 		bself = self
+		self.syncable = False
 		if type(data) == str:
 			self.tree = loads(data)
-		else:
+		elif type(data) == dict:
 			verify(data)
 			self.tree = data
+		elif type(data) == _io.TextIOWrapper:
+			if data.mode in ['r+','w+']:
+				self.syncable = True
+				self.file = data
+				tmp = loads(data.read())
+				self.tree = tmp.data
+				self.cmts = tmp.comments
+				print('comments',self.cmts)
 		self.cwd = '/'
 		self.ftree = {}
 		self.prevdir = []
@@ -352,18 +373,45 @@ Returns a class similar to the builtin function `open()`, the following methods 
 				self.readable = False
 				self.closed = False
 				self.name = path
-			if mode == 'w+':
+				self.tmp = ''
+			if mode == 'a':
 				self.writable = True
 				self.readable = False
 				self.closed = False
 				self.name = path
-			loc = self.etree.index(self.cwd+'/'+path)
+				self.tmp = ''
+			if mode == 'a+':
+				self.writable = True
+				self.readable = False
+				self.closed = False
+				self.name = path
+				self.tmp = ''
+			if mode == 'w+':
+				self.writable = True
+				self.readable = True
+				self.closed = False
+				self.name = path
+				self.tmp = ''
+			if mode == 'r+':
+				self.writable = True
+				self.readable = True
+				self.closed = False
+				self.name = path
+				self.tmp = ''
+			if self.cwd == '/':
+				loc = self.etree.index('/'+path)
+			else:
+				loc = self.etree.index(self.cwd+'/'+path)
 			loc2 = self.etree[loc]
 			data = loc2.split('/')
 			self.dpath = self.tree
+			self.mode = mode
 			for i in data[1:]:
 				if i == data[len(data)-1]:
-					self.floc = self.ftree[self.cwd+'/'+path]
+					if self.cwd != '/':
+						self.floc = self.ftree[self.cwd+'/'+path]
+					else:
+						self.floc = self.ftree['/'+path]
 					if mode == 'w+':
 						self.dpath[self.floc] = ""
 					break
@@ -380,9 +428,32 @@ Returns a class similar to the builtin function `open()`, the following methods 
 			self = bself
 			'''Writes to the value.'''
 			if self.writable:
-				self.dpath[self.floc] += data
+				if self.mode == 'w':
+					self.dpath[self.floc] = data
+				if self.mode == 'w+':
+					self.dpath[self.floc] = data
+				if self.mode == 'a':
+					self.dpath[self.floc] += data
+				if self.mode == 'a+':
+					self.dpath[self.floc] += data
+				if self.mode == 'r+':
+					self.dpath[self.floc] = data
 			else:
 				raise PermissionError("Operation Not Permitted")
-			
-		
-		
+	def writecomment(self,data):
+		print('tup',self.cmts[-1:])
+		self.cmts.append((data,self.cmts[-1:][0][1]+1))
+		print(self.cmts)
+	def sync(self):
+		print("You are about to run an experimental feature")
+		if self.syncable == False:
+			raise PermissionError("Please provide a fil object to open when initalizing or file object is not an acceptable mode.")
+		print(self.tree)
+		prestr = dumps(self.tree).split('\n')
+		for i in self.cmts:
+			prestr.insert(i[1],"#"+i[0]+';')
+		self.file.truncate(0)
+		self.file.seek(0)
+		self.file.write('\n'.join(prestr)[:-1])
+		self.file.flush()
+		self.file.seek(0) 

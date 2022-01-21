@@ -1,12 +1,15 @@
 # SCON
 #### **S**emicolon **C**ut **O**bject **N**otation
-A better way to dictonary  
+A better way to dictionary  
 ## Build Info
-Version: 1.0  
-Build: Latest (Jan 20 2022 @ 6:56 PM EST)  
-Platform: Developer (**Proceed at your own risk**)
+Version: 1.0.1  
+Build: Latest (Jan 21 2022 @ 8:58 AM EST)  
+Platform: Developer (The risky biscut) (**Proceed at your own risk**)
 ## Release Notes
-Inital Release
+- Fixed space issue
+## New Features
+- SCON file syncing
+- Ability to add comments to SCON file.
 ***
 ## Description:
 SCON (Pronounced: scone) is a versatile way for formmatting data and is loosely based on JSON, and can be used across multiple platforms.
@@ -115,11 +118,18 @@ sub_dictionary0{
 }
 #Every line ends with semicolons execept for dictionaries. this comment will continue until you put a semicolon;
 ```
+# The Development Features
+### Browse(open(...))
+For `data` if the _io.TextIOWrapper object has a mode attribute with the value of: `r+`,`a+`,or `w+` you can use the sync feature.
+### sync()
+Sync the SCON file.
+### writecomment(comment)
+Appends a comment to the end of the file
 # You have reached the end of the documentation!
 Happy database creation!
 # Coming Soon
 - Micropython port
-- A more basic version of this library (sconlite)
 ***
-Check out other builds such as `experimental` or `Stable`
+Check out other builds such as
+[`experimental`](https://github.com/Github73840134/SCON-experimental) or [`Stable`](https://github.com/Github73840134/SCON)
 ©2022 Github73840134
