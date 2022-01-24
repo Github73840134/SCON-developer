@@ -1,6 +1,6 @@
 from collections import namedtuple
 import _io
-__version__ = "1.0"
+__version__ = "1.0.1"
 __build__ = "Latest"
 __platform__ = "Developer"
 print("You are using a developer build. Proceed at your own risk")
