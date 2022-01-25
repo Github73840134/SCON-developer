@@ -6,7 +6,7 @@ Version: 1.0.2
 Build: Latest (Jan 25 2022 @ 3:11 PM EST)  
 Platform: Developer (The risky biscut) (**Proceed at your own risk**)
 ## Release Notes
-- Fixed space issue
+- Added compression.
 ## New Features
 See the [devGuide](https://github.com/Github73840134/SCON-developer/blob/main/devGuide.md).
 ***
