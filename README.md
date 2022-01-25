@@ -8,8 +8,7 @@ Platform: Developer (The risky biscut) (**Proceed at your own risk**)
 ## Release Notes
 - Fixed space issue
 ## New Features
-- SCON file syncing
-- Ability to add comments to SCON file.
+See the [devGuide](https://github.com/Github73840134/SCON-developer/blob/main/devGuide.md).
 ***
 ## Description:
 SCON (Pronounced: scone) is a versatile way for formmatting data and is loosely based on JSON, and can be used across multiple platforms.
