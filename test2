@@ -1,0 +1,1 @@
+$ii{0="string";1="int";2="true_bool";3="false_bool";4="nothing";5="list";6{n="sub_dictionary0";d{0="sub_value";}}}$d{0="This is an updated string.";1=0;2=true;3=false;4=null;5=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9];6{0="I am a sub";}}

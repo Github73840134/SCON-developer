@@ -2,8 +2,8 @@
 #### **S**emicolon **C**ut **O**bject **N**otation
 A better way to dictionary  
 ## Build Info
-Version: 1.0.1  
-Build: Latest (Jan 21 2022 @ 8:58 AM EST)  
+Version: 1.0.2 
+Build: Latest (Jan 25 2022 @ 3:11 PM EST)  
 Platform: Developer (The risky biscut) (**Proceed at your own risk**)
 ## Release Notes
 - Fixed space issue
@@ -88,7 +88,6 @@ Gets the current directory.
 Changes the current directory.  
 ### Browse.open(path,mode="r")
 Opens the value to be read or written to.  
-**NOTE!**: Any changes made to the dictonary will not sync to the SCON file.  (This feature will be added soon in the developer release)
 * Path
   * type: str
 
@@ -118,13 +117,6 @@ sub_dictionary0{
 }
 #Every line ends with semicolons execept for dictionaries. this comment will continue until you put a semicolon;
 ```
-# The Development Features
-### Browse(open(...))
-For `data` if the _io.TextIOWrapper object has a mode attribute with the value of: `r+`,`a+`,or `w+` you can use the sync feature.
-### sync()
-Sync the SCON file.
-### writecomment(comment)
-Appends a comment to the end of the file
 # You have reached the end of the documentation!
 Happy database creation!
 # Coming Soon
